@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Users - Connekt Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: #fff;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 6px 12px;
+      margin: 2px 4px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .delete-btn { background-color: #e74c3c; color: white; }
+    .block-btn { background-color: #f39c12; color: white; }
+    .unblock-btn { background-color: #27ae60; color: white; }
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .badge.active { background-color: #27ae60; }
+    .badge.blocked { background-color: #e74c3c; }
+    #searchInput {
+      margin: 20px 0;
+      padding: 8px 12px;
+      width: 250px;
+    }
+    #exportBtn {
+      margin-left: 12px;
+      padding: 8px 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #2c3e50; color: white;">
+  <h1 style="margin: 0; font-size: 1.5rem;">Connekt Manage Users</h1>
+  <div style="display: flex; align-items: center; gap: 20px;">
+    <nav>
+      <a href="admin-dashboard.html" style="margin-right: 15px; color: white;">Dashboard</a>
+      <a href="admin-posts.html" style="margin-right: 15px; color: white;">Manage Posts</a>
+      <a href="admin-jobs.html" style="margin-right: 15px; color: white;">Manage Jobs</a>
+    </nav>
+    <button onclick="logout()" style="background-color: #dc3545; color: white; padding: 8px 12px; border: none; border-radius: 5px;">Logout</button>
+  </div>
+</header>
+
+<main style="padding: 0 20px;">
+  <input type="text" id="searchInput" placeholder="Search users by name/email..." onkeyup="filterUsers()" />
+  <button id="exportBtn" onclick="exportCSV()">Export CSV</button>
+
+  <table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Tokens</th>
+    <th>Posts</th>
+    <th>Applications</th>
+    <th>Status</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+
+    <tbody id="user-table-body">
+   
+    </tbody>
+  </table>
+</main>
+
+<script>
+  function logout() {
+    localStorage.removeItem("adminLoggedIn");
+    sessionStorage.clear();
+    window.location.href = "index.html";
+  }
+</script>
+<script src="admin-users.js"></script>
+</body>
+</html>

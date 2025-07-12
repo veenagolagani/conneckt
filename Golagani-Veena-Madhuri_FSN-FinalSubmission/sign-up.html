@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connekt - Sign Up</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .form-slide {
+      display: none;
+      transition: all 0.3s ease;
+    }
+    .form-slide.active {
+      display: block;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Create Your Connekt Profile</h2>
+    <form id="signupform">
+      <!-- Step 1: Personal Information -->
+      <div class="form-slide active" id="slide-1">
+        <h4>Personal Information</h4>
+        <br>
+        <label>Full Name</label>
+        <input type="text" id="name" required />
+        <label>Email</label>
+        <input type="email" id="email" required />
+        <label>Password</label>
+        <input type="password" id="password" required />
+        <label>Phone Number</label>
+        <input type="tel" id="phone" required />
+        <label>Date of Birth</label>
+        <input type="date" id="dob" required />
+        <label>Gender</label>
+        <select id="gender" required>
+          <option value="">Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <br>
+        <br>
+        <label>Profile Picture</label>
+        <input type="file" id="profile" accept="image/*" />
+      </div>
+
+      <!-- Step 2: Professional Info -->
+      <div class="form-slide" id="slide-2">
+        <h4>Professional Information</h4>
+        <br>
+        <label>Job Title</label>
+        <input type="text" id="jobtitle" required />
+        <label>Company</label>
+        <input type="text" id="company" />
+        <label>Years of Experience</label>
+        <input type="number" id="experience" min="0" required />
+        <label>Location</label>
+        <input type="text" id="location" required />
+        <label>Industry</label>
+        <input type="text" id="industry" required />
+        <label>Skills (comma-separated)</label>
+        <input type="text" id="skills" />
+        <label>GitHub URL</label>
+        <input type="url" id="git" />
+      </div>
+
+      <!-- Step 3: Education -->
+      <div class="form-slide" id="slide-3">
+        <h4>Educational Background</h4>
+        <br>
+        <label>Highest Qualification</label>
+        <input type="text" id="qualification" required />
+        <label>Institution</label>
+        <input type="text" id="institution" required />
+        <label>Field of Study</label>
+        <input type="text" id="field" required />
+        <label>Graduation Year</label>
+        <input type="number" id="gradYear" min="1900" max="2099" required />
+      </div>
+
+      <!-- Step 4: Additional -->
+      <div class="form-slide" id="slide-4">
+        <h4>Additional Information</h4>
+        <br>
+        <label>Languages Known</label>
+        <input type="text" id="languages" placeholder="e.g. English, Hindi" />
+        <label>Career Interests</label>
+        <select id="interests" required>
+          <option value="">Select</option>
+          <option value="Full-time">Full-time</option>
+          <option value="Internship">Internship</option>
+          <option value="Freelance">Freelance</option>
+        </select>
+        <br>
+        <br>
+        <label>Willing to Relocate</label>
+        <select id="relocate" required>
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+        <br><br>
+        <label>Upload Resume</label>
+        <input type="file" id="resume" accept=".pdf,.doc,.docx" />
+      </div>
+
+   
+      <div class="nav-buttons">
+        <button type="button" id="prevBtn">Previous</button>
+        <button type="button" id="nextBtn">Next</button>
+        <button type="submit" id="submitBtn" style="display:none">Sign Up</button>
+      </div>
+    </form>
+    <a href="index.html" class="link">Already have an account? Log in</a>
+  </div>
+  <script src="signup.js"></script>
+</body>
+</html>

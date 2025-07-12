@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Profile - Connekt</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .profile-pic-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .profile-pic-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: 0.3s ease;
+      background-color: #ddd;
+    }
+
+    .profile-pic-container:hover .profile-pic-preview {
+      filter: grayscale(100%) opacity(0.6);
+    }
+
+    .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      display: none;
+      pointer-events: none;
+    }
+
+    .profile-pic-container:hover .overlay-text {
+      display: block;
+    }
+
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+
+    form label {
+      display: block;
+      margin: 10px 0 5px;
+      text-align: left;
+    }
+
+    form input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    form button {
+      padding: 10px 20px;
+      background-color: #0073b1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .link {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #0073b1;
+    }
+
+    #resumeLink a {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #0073b1;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button onclick="goBack()" class="back-btn">← Back</button>
+    <h2>Edit Profile</h2>
+
+    <div class="profile-pic-container" onclick="document.getElementById('profileImage').click()">
+      <img id="profilePreview" class="profile-pic-preview" src="" alt="Profile Image" />
+      <div class="overlay-text">Change</div>
+    </div>
+    <input type="file" id="profileImage" accept="image/*" hidden>
+
+    <form id="editProfileForm">
+      <label>Full Name</label>
+      <input type="text" id="name" required />
+
+      <label>Headline</label>
+      <input type="text" id="headline" required />
+
+      <label>Location</label>
+      <input type="text" id="location" required />
+
+      <label>Industry</label>
+      <input type="text" id="industry" required />
+
+      <label>Email</label>
+      <input type="email" id="email" required />
+
+      <label>Phone</label>
+      <input type="tel" id="phone" required />
+
+      <label for="resumeFile">Upload Resume (PDF/DOC)</label>
+      <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" />
+      <div id="resumeLink"></div>
+
+      <button type="submit">Save Changes</button>
+      <a class="link" href="feed.html">Cancel</a>
+    </form>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!user || !user.id) {
+      alert("No logged-in user. Redirecting to login...");
+      window.location.href = "index.html";
+    }
+
+    const profilePreview = document.getElementById("profilePreview");
+    const fileInput = document.getElementById("profileImage");
+    const resumeInput = document.getElementById("resumeFile");
+    let profileImageBase64 = "";
+    let resumeBase64 = "";
+
+    fetch(`http://localhost:3000/users/${user.id}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("name").value = data.name || "";
+        document.getElementById("headline").value = data.position || "";
+        document.getElementById("location").value = data.location || "";
+        document.getElementById("industry").value = data.industry || "";
+        document.getElementById("email").value = data.email || "";
+        document.getElementById("phone").value = data.phone || "";
+        profilePreview.src = data.profileImage || "default.jpg";
+        profileImageBase64 = data.profileImage || "";
+        resumeBase64 = data.resume || "";
+
+        // Show link to current resume
+        if (resumeBase64) {
+          const resumeLink = document.getElementById("resumeLink");
+          resumeLink.innerHTML = `<a href="${resumeBase64}" target="_blank">View Current Resume</a>`;
+        }
+      });
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          profilePreview.src = e.target.result;
+          profileImageBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    resumeInput.addEventListener("change", () => {
+      const file = resumeInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          resumeBase64 = e.target.result;
+          const resumeLink = document.getElementById("resumeLink");
+          resumeLink.innerHTML = `<a href="${resumeBase64}" target="_blank">View Uploaded Resume</a>`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById("editProfileForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const updatedData = {
+        name: document.getElementById("name").value,
+        position: document.getElementById("headline").value,
+        location: document.getElementById("location").value,
+        industry: document.getElementById("industry").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        profileImage: profileImageBase64,
+        resume: resumeBase64
+      };
+
+      fetch(`http://localhost:3000/users/${user.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData)
+      })
+        .then(res => res.json())
+        .then(updatedUser => {
+          localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+          alert("Profile updated successfully!");
+          window.location.href = "feed.html";
+        })
+        .catch(err => {
+          console.error("Error updating profile:", err);
+          alert("Failed to update profile.");
+        });
+    });
+
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+</body>
+</html>
